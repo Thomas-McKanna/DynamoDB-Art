@@ -3,9 +3,8 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   drawing-with-dynamodb
 
-  Sample SAM Template for drawing-with-dynamodb
+  SAM Template for drawing-with-dynamodb
 
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 3
@@ -23,17 +22,34 @@ Resources:
           Properties:
             Path: /putDrawing
             Method: post
+  GetDrawingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: get_drawing/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Events:
+        PutDrawing:
+          Type: Api
+          Properties:
+            Path: /getDrawing
+            Method: post
+  GetAllDrawingsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: get_all_drawings/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Policies:
+        - arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess
+      Events:
+        PutDrawing:
+          Type: Api
+          Properties:
+            Path: /getAllDrawings
+            Method: get
 
 Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+  DrawWithDynamodbApi:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

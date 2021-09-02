@@ -2,6 +2,11 @@
 
 This aim of this project is to grow my knowledge of DynamoDB, Lambda, and API Gateway. The idea is to allow the user to record a drawing on their web browser, and then to store that drawing into DynamoDB and allow the user to play back their drawing.
 
+## TODO
+
+- Figure out how to deploy DynamoDB table with SAM template
+- Figure out how to deploy API endpoints with open CORS policy
+
 ## Backend
 
 ## Lessons Learned

@@ -1,4 +1,4 @@
-let API_BASE = "https://nvtj3expz0.execute-api.us-west-1.amazonaws.com/default";
+let API_BASE = "https://lpqfk3is2f.execute-api.us-west-1.amazonaws.com/Prod";
 
 function create_uuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -115,7 +115,7 @@ function upload_drawing_to_dynamodb(name) {
     console.log("Sfdsf")
 
     let request = new XMLHttpRequest();
-    request.open("POST", `${API_BASE}/put_drawing`, true);
+    request.open("POST", `${API_BASE}/putDrawing`, true);
     request.send(JSON.stringify(body));
 
     request.onreadystatechange = function() {
