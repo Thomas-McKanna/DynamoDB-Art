@@ -1,5 +1,6 @@
 import boto3
 import simplejson as json
+import logging
 
 from boto3.dynamodb.types import TypeSerializer, TypeDeserializer
 
@@ -18,11 +19,12 @@ def get_response(status, body=None):
 def lambda_handler(event, context):
     dynamodb = boto3.client("dynamodb")
     serializer = TypeSerializer()
+    body = json.loads(event["body"])
     
     try:
-        drawing_id = event["id"]
-        name = event["name"]
-        strokes = event["strokes"]
+        drawing_id = body["id"]
+        name = body["name"]
+        strokes = body["strokes"]
     except KeyError:
         return get_response(
             status=400,
@@ -42,6 +44,8 @@ def lambda_handler(event, context):
         
         for stroke in strokes:
             stroke["id"] = drawing_id
+        
+        logging.error(strokes)
 
         response = dynamodb.batch_write_item(
             RequestItems={

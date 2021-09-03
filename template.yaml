@@ -16,6 +16,14 @@ Resources:
       CodeUri: put_drawing/
       Handler: app.lambda_handler
       Runtime: python3.8
+      Policies:
+      - Statement:
+        - Sid: PutItemAndBatchWritePolicy
+          Effect: Allow
+          Action:
+          - dynamodb:PutItem
+          - dynamodb:BatchWriteItem
+          Resource: '*'
       Events:
         PutDrawing:
           Type: Api
@@ -28,6 +36,13 @@ Resources:
       CodeUri: get_drawing/
       Handler: app.lambda_handler
       Runtime: python3.8
+      Policies:
+      - Statement:
+        - Sid: PutItemAndBatchWritePolicy
+          Effect: Allow
+          Action:
+          - dynamodb:Scan
+          Resource: '*'
       Events:
         PutDrawing:
           Type: Api
@@ -41,7 +56,12 @@ Resources:
       Handler: app.lambda_handler
       Runtime: python3.8
       Policies:
-        - arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess
+      - Statement:
+        - Sid: PutItemAndBatchWritePolicy
+          Effect: Allow
+          Action:
+          - dynamodb:Scan
+          Resource: '*'
       Events:
         PutDrawing:
           Type: Api
