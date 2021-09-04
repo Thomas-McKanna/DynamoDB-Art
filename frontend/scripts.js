@@ -9,7 +9,7 @@ function create_uuid() {
 }
 
 function add_canvas_event_listeners() {
-    let canvas = document.getElementById("draw_canvas");
+    let canvas = document.getElementById("drawing_canvas");
     canvas.addEventListener("mousedown", on_mouse_down);
     canvas.addEventListener("mousemove", on_mouse_move);
     canvas.addEventListener("mouseup", on_mouse_up);
@@ -21,7 +21,7 @@ function on_mouse_down() {
 }
 
 function on_mouse_move(event) {
-    let canvas = document.getElementById("draw_canvas");
+    let canvas = document.getElementById("drawing_canvas");
     let ctx = canvas.getContext("2d");
 
     if (state.mouse_just_down) {
@@ -127,12 +127,33 @@ function upload_drawing_to_dynamodb(name) {
     }
 }
 
-function add_drawing_to_list() {
-    // TODO
+function add_drawing_to_list(id, name, timestamp) {
+    let row = document.createElement("div");
+    row.classList.add("row", "mb-2");
+
+    let replay_button = document.createElement("button")
+    replay_button.classList.add("btn", "btn-primary", "mr-2");
+    replay_button.textContent = "Replay";
+    replay_button.onclick = function() {
+        replay_drawing(id);
+    };
+
+    let label = document.createElement("p");
+    label.textContent = `${name} - ${timestamp}`;
+
+    row.appendChild(replay_button);
+    row.appendChild(label);
+
+    let drawing_list = document.getElementById("drawing_list");
+    drawing_list.appendChild(row);
+}
+
+function test_append_drawing() {
+    add_drawing_to_list("aaa", "bbb", "ccc");
 }
 
 function clear_canvas() {
-    let canvas = document.getElementById("draw_canvas");
+    let canvas = document.getElementById("drawing_canvas");
     let ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // The following function call clears the "line history" of the canvas;
