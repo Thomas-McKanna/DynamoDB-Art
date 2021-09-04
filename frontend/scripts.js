@@ -1,4 +1,4 @@
-let API_BASE = "https://lpqfk3is2f.execute-api.us-west-1.amazonaws.com/Prod";
+let API_BASE = "https://f6fs8yogdj.execute-api.us-west-1.amazonaws.com/Prod";
 
 function create_uuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -111,16 +111,13 @@ function upload_drawing_to_dynamodb(name) {
         "strokes": stroke_history
     }
 
-    console.log(body);
-    console.log("Sfdsf")
-
     let request = new XMLHttpRequest();
     request.open("POST", `${API_BASE}/putDrawing`, true);
     request.send(JSON.stringify(body));
 
     request.onreadystatechange = function() {
         if (this.readyState == 4) {
-            if (this.status == 200) {
+            if (this.status == 204) {
                 alert("Drawing upload successful");
             } else {
                 alert("Drawing upload failed");

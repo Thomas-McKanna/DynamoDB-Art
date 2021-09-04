@@ -2,12 +2,15 @@ import boto3
 import simplejson as json
 import logging
 
-from boto3.dynamodb.types import TypeSerializer, TypeDeserializer
+from boto3.dynamodb.types import TypeSerializer
 
 
 def get_response(status, body=None):
     response = {
-        "statusCode": status
+        "statusCode": status,
+        "headers": {
+            "access-control-allow-origin": "*"
+        }
     }
     
     if body:

@@ -4,6 +4,19 @@ import json
 from boto3.dynamodb.types import TypeDeserializer
 
 
+def get_response(status, body=None):
+    response = {
+        "statusCode": status,
+        "headers": {
+            "access-control-allow-origin": "*"
+        }
+    }
+    
+    if body:
+        response["body"] = json.dumps(body)
+    
+    return response
+
 def lambda_handler(event, context):
     dynamodb = boto3.client("dynamodb")
     
@@ -12,21 +25,16 @@ def lambda_handler(event, context):
             TableName="drawings_metadata"
         )
     except Exception as e:
-        return {
-            "statusCode": 500,
-            "body": str(e)
-        }
+        return get_response(500, str(e))
         
     items = response["Items"]
     
     deserializer = TypeDeserializer()
-    return {
-        "statusCode": 200,
-        "body": json.dumps([
-            {
-                k: deserializer.deserialize(v)
-                for k, v in item.items()
-            } 
-            for item in items
-        ])
-    }
+    body = [
+        {
+            k: deserializer.deserialize(v)
+            for k, v in item.items()
+        } 
+        for item in items
+    ]
+    return get_response(200, body)

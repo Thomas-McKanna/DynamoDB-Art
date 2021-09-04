@@ -4,6 +4,19 @@ import simplejson as json
 from boto3.dynamodb.types import TypeSerializer, TypeDeserializer
 
 
+def get_response(status, body=None):
+    response = {
+        "statusCode": status,
+        "headers": {
+            "access-control-allow-origin": "*"
+        }
+    }
+    
+    if body:
+        response["body"] = json.dumps(body)
+    
+    return response
+
 def lambda_handler(event, context):
     dynamodb = boto3.client("dynamodb")
     serializer = TypeSerializer()
@@ -12,10 +25,7 @@ def lambda_handler(event, context):
     try:
         drawing_id = body["id"]
     except KeyError:
-        return {
-            "statusCode": 400,
-            "body": "Request must include key for 'id'"
-        }
+        return get_response(400, "Request must include key for 'id'")
     
     try:
         response = dynamodb.scan(
@@ -26,26 +36,19 @@ def lambda_handler(event, context):
             TableName="drawings"
         )
     except Exception as e:
-        return {
-            "statusCode": 500,
-            "body": str(e)
-        }
+        return get_response(500, str(e))
         
     items = response["Items"]
     
     if not len(items):
-        return {
-            "statusCode": 404
-        }
+        return get_response(404)
     else:
         deserializer = TypeDeserializer()
-        return {
-            "statusCode": 200,
-            "body": json.dumps([
-                {
-                    k: deserializer.deserialize(v)
-                    for k, v in item.items() if k != "id"
-                } 
-                for item in items
-            ])
-        }
+        body = [
+            {
+                k: deserializer.deserialize(v)
+                for k, v in item.items() if k != "id"
+            } 
+            for item in items
+        ]
+        return get_response(200, body)

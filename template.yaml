@@ -1,9 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: >
-  drawing-with-dynamodb
-
-  SAM Template for drawing-with-dynamodb
+Description: Drawing with DynamoDB SAM Template
 
 Globals:
   Function:
@@ -16,13 +13,14 @@ Resources:
       CodeUri: put_drawing/
       Handler: app.lambda_handler
       Runtime: python3.8
+      FunctionName: PutDrawing
       Policies:
       - Statement:
-        - Sid: PutItemAndBatchWritePolicy
+        - Sid: PutDrawingFunctionPolicy
           Effect: Allow
           Action:
-          - dynamodb:PutItem
-          - dynamodb:BatchWriteItem
+            - dynamodb:PutItem
+            - dynamodb:BatchWriteItem
           Resource: '*'
       Events:
         PutDrawing:
@@ -30,46 +28,83 @@ Resources:
           Properties:
             Path: /putDrawing
             Method: post
+            RestApiId: !Ref DrawingWithDynamoDBApi
   GetDrawingFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: get_drawing/
       Handler: app.lambda_handler
       Runtime: python3.8
+      FunctionName: GetDrawing
       Policies:
       - Statement:
-        - Sid: PutItemAndBatchWritePolicy
+        - Sid: GetDrawingPolicy
           Effect: Allow
           Action:
-          - dynamodb:Scan
+            - dynamodb:Scan
           Resource: '*'
       Events:
-        PutDrawing:
+        GetDrawing:
           Type: Api
           Properties:
             Path: /getDrawing
             Method: post
+            RestApiId: !Ref DrawingWithDynamoDBApi
   GetAllDrawingsFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: get_all_drawings/
       Handler: app.lambda_handler
       Runtime: python3.8
+      FunctionName: GetAllDrawings
       Policies:
       - Statement:
-        - Sid: PutItemAndBatchWritePolicy
+        - Sid: GetAllDrawingsPolicy
           Effect: Allow
           Action:
-          - dynamodb:Scan
+            - dynamodb:Scan
           Resource: '*'
       Events:
-        PutDrawing:
+        GetAllDrawings:
           Type: Api
           Properties:
             Path: /getAllDrawings
             Method: get
+            RestApiId: !Ref DrawingWithDynamoDBApi
+  DrawingWithDynamoDBApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: DrawingWithDynamoDBApi
+      StageName: Prod
+  DrawingsMetadataTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions: 
+        - AttributeName: id
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema: 
+        - AttributeName: id
+          KeyType: HASH
+      TableName: drawings_metadata
+  DrawingsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions: 
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: stroke_num
+          AttributeType: N
+      BillingMode: PAY_PER_REQUEST
+      KeySchema: 
+        - AttributeName: id
+          KeyType: HASH
+        - AttributeName: stroke_num
+          KeyType: RANGE
+      TableName: drawings
+
 
 Outputs:
   DrawWithDynamodbApi:
     Description: "API Gateway endpoint URL"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Value: !Sub "https://${DrawingWithDynamoDBApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
