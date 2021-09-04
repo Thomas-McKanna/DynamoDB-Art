@@ -98,9 +98,16 @@ function start_recording() {
     clear_canvas();
 }
 
-function stop_recording() {
-    state.recording = false;
-    upload_drawing_to_dynamodb("simple drawing");
+function save_drawing() {
+    let name_input = document.getElementById("drawing_name");
+    let name = name_input.value;
+
+    if (name == "") {
+        name = "untitled";
+    }
+
+    upload_drawing_to_dynamodb(name);
+    $("#name_drawing").modal("hide");
 }
 
 function upload_drawing_to_dynamodb(name) {
@@ -177,7 +184,7 @@ async function replay_strokes(strokes) {
         ctx.moveTo(stroke.prev_x, stroke.prev_y);
         ctx.lineTo(stroke.curr_x, stroke.curr_y)
         ctx.stroke();
-        await sleep(25);
+        await sleep(35);
     }
 }
 
@@ -203,6 +210,13 @@ function init_drawing_list() {
             }
         }
     }
+}
+
+function stop_recording() {
+    state.recording = false;
+    let name_input = document.getElementById("drawing_name");
+    name_input.value = "";
+    $("#name_drawing").modal("show");
 }
 
 function clear_canvas() {
