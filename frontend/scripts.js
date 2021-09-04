@@ -1,4 +1,4 @@
-let API_BASE = "https://u45qxocyz5.execute-api.us-west-1.amazonaws.com/Prod";
+let API_BASE = "https://ove74of5h8.execute-api.us-west-1.amazonaws.com/Prod";
 
 function create_uuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -135,6 +135,8 @@ function upload_drawing_to_dynamodb(name) {
 }
 
 function add_drawing_to_list(id, name, timestamp) {
+    formatted_timestamp = get_formatted_datetime(timestamp);
+
     let row = document.createElement("div");
     row.classList.add("row", "mb-2");
 
@@ -142,7 +144,7 @@ function add_drawing_to_list(id, name, timestamp) {
     icon.classList.add("fa", "fa-play");
 
     let label = document.createElement("span");
-    label.textContent = ` ${name} - ${timestamp}`;
+    label.textContent = ` ${name} - ${formatted_timestamp}`;
 
     let replay_button = document.createElement("button")
     replay_button.classList.add("btn", "btn-outline-primary", "mr-2");
@@ -157,6 +159,22 @@ function add_drawing_to_list(id, name, timestamp) {
 
     let drawing_list = document.getElementById("drawing_list");
     drawing_list.appendChild(row);
+}
+
+function get_formatted_datetime(iso_string) {
+    let epoch = Date.parse(iso_string);
+    let datetime = new Date(epoch);
+
+    format_args = {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+    };
+
+    let date = datetime.toLocaleDateString("en-us", format_args);
+    let time = datetime.toLocaleTimeString("en-us");
+    return `${date} ${time}`;
 }
 
 function replay_drawing(id) {
