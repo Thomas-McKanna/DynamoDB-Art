@@ -185,6 +185,26 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function init_drawing_list() {
+    let request = new XMLHttpRequest();
+    request.open("GET", `${API_BASE}/getAllDrawings`, true);
+    request.send();
+
+    request.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                drawings = JSON.parse(request.responseText);
+                for (d of drawings) {
+                    add_drawing_to_list(d.id, d.name, d.timestamp)
+                }
+                console.log(drawings);
+            } else {
+                alert("Failed to retrieve drawing");
+            }
+        }
+    }
+}
+
 function clear_canvas() {
     let canvas = document.getElementById("drawing_canvas");
     let ctx = canvas.getContext("2d");
@@ -198,3 +218,4 @@ function clear_canvas() {
 add_canvas_event_listeners();
 let state = init_state();
 let stroke_history = init_stroke_history();
+init_drawing_list();
