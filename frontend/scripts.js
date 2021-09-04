@@ -1,4 +1,4 @@
-let API_BASE = "https://f6fs8yogdj.execute-api.us-west-1.amazonaws.com/Prod";
+let API_BASE = "https://u45qxocyz5.execute-api.us-west-1.amazonaws.com/Prod";
 
 function create_uuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -101,7 +101,6 @@ function start_recording() {
 function stop_recording() {
     state.recording = false;
     upload_drawing_to_dynamodb("simple drawing");
-    add_drawing_to_list();
 }
 
 function upload_drawing_to_dynamodb(name) {
@@ -109,7 +108,7 @@ function upload_drawing_to_dynamodb(name) {
         "id": state.id,
         "name": name,
         "strokes": stroke_history
-    }
+    };
 
     let request = new XMLHttpRequest();
     request.open("POST", `${API_BASE}/putDrawing`, true);
@@ -117,11 +116,12 @@ function upload_drawing_to_dynamodb(name) {
 
     request.onreadystatechange = function() {
         if (this.readyState == 4) {
-            if (this.status == 204) {
+            if (this.status == 200) {
                 alert("Drawing upload successful");
+                res = JSON.parse(request.responseText);
+                add_drawing_to_list(res.id, res.name, res.timestamp);
             } else {
                 alert("Drawing upload failed");
-                console.log(request)
             }
         }
     }
@@ -148,8 +148,41 @@ function add_drawing_to_list(id, name, timestamp) {
     drawing_list.appendChild(row);
 }
 
-function test_append_drawing() {
-    add_drawing_to_list("aaa", "bbb", "ccc");
+function replay_drawing(id) {
+    let body = {
+        "id": id
+    };
+
+    let request = new XMLHttpRequest();
+    request.open("POST", `${API_BASE}/getDrawing`, true);
+    request.send(JSON.stringify(body));
+
+    request.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                strokes = JSON.parse(request.responseText);
+                replay_strokes(strokes)
+            } else {
+                alert("Failed to retrieve drawing");
+            }
+        }
+    }
+}
+
+async function replay_strokes(strokes) {
+    clear_canvas();
+    let canvas = document.getElementById("drawing_canvas");
+    let ctx = canvas.getContext("2d");
+    for (stroke of strokes) {
+        ctx.moveTo(stroke.prev_x, stroke.prev_y);
+        ctx.lineTo(stroke.curr_x, stroke.curr_y)
+        ctx.stroke();
+        await sleep(25);
+    }
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function clear_canvas() {

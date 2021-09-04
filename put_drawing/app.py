@@ -1,6 +1,8 @@
 import boto3
-import simplejson as json
 import logging
+import simplejson as json
+
+from datetime import datetime
 
 from boto3.dynamodb.types import TypeSerializer
 
@@ -28,6 +30,7 @@ def lambda_handler(event, context):
         drawing_id = body["id"]
         name = body["name"]
         strokes = body["strokes"]
+        timestamp = datetime.now().isoformat()
     except KeyError:
         return get_response(
             status=400,
@@ -37,7 +40,8 @@ def lambda_handler(event, context):
     try:
         drawings_metadata_item = {
             "id": serializer.serialize(drawing_id),
-            "name": serializer.serialize(name)
+            "name": serializer.serialize(name),
+            "timestamp": serializer.serialize(timestamp)
         }
 
         response = dynamodb.put_item(
@@ -50,22 +54,29 @@ def lambda_handler(event, context):
         
         logging.error(strokes)
 
-        response = dynamodb.batch_write_item(
-            RequestItems={
-                "drawings": [
-                    {
-                        "PutRequest": {
-                            "Item": {
-                                k: serializer.serialize(v)
-                                for k, v in stroke.items()
+        # Can only batch write 25 items at a time
+        for i in range(0, len(strokes), 25):
+            response = dynamodb.batch_write_item(
+                RequestItems={
+                    "drawings": [
+                        {
+                            "PutRequest": {
+                                "Item": {
+                                    k: serializer.serialize(v)
+                                    for k, v in stroke.items()
+                                }
                             }
-                        }
-                    } 
-                    for stroke in strokes
-                ]
-            }
-        )
+                        } 
+                        for stroke in strokes[i:i+25]
+                    ]
+                }
+            )
     except Exception as e:
         return get_response(status=500, body=str(e))
 
-    return get_response(status=204)
+    body = {
+        "id": drawing_id,
+        "name": name,
+        "timestamp": timestamp
+    }
+    return get_response(status=200, body=body)
