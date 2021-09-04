@@ -8,6 +8,7 @@
 
     <title>DynamoDB Art</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -16,8 +17,8 @@
             <h1>DynamoDB Art</h1>
         </div>
         <div class="row mb-2">
-            <button type="button" class="btn btn-primary mr-2" onclick="start_recording()">Start Recording</button>
-            <button type="button" class="btn btn-primary" onclick="stop_recording()">Stop Recording</button>
+            <button type="button" class="btn btn-primary mr-2" onclick="start_recording()">Start Recording <i class="fa fa-play"></i></button>
+            <button type="button" class="btn btn-primary" onclick="stop_recording()">Stop Recording <i class="fa fa-stop"></i></button>
         </div>
         <div class="row">
             <canvas id="drawing_canvas" height="500" width="500" style="border: solid;"></canvas>

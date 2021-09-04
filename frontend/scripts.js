@@ -138,18 +138,22 @@ function add_drawing_to_list(id, name, timestamp) {
     let row = document.createElement("div");
     row.classList.add("row", "mb-2");
 
+    let icon = document.createElement("i");
+    icon.classList.add("fa", "fa-play");
+
+    let label = document.createElement("span");
+    label.textContent = ` ${name} - ${timestamp}`;
+
     let replay_button = document.createElement("button")
-    replay_button.classList.add("btn", "btn-primary", "mr-2");
-    replay_button.textContent = "Replay";
+    replay_button.classList.add("btn", "btn-outline-primary", "mr-2");
+
+    replay_button.appendChild(icon);
+    replay_button.appendChild(label);
     replay_button.onclick = function() {
         replay_drawing(id);
     };
 
-    let label = document.createElement("p");
-    label.textContent = `${name} - ${timestamp}`;
-
     row.appendChild(replay_button);
-    row.appendChild(label);
 
     let drawing_list = document.getElementById("drawing_list");
     drawing_list.appendChild(row);
