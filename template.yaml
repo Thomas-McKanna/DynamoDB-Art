@@ -132,6 +132,6 @@ Resources:
 
 
 Outputs:
-  DrawWithDynamodbApi:
+  ApiBase:
     Description: "API Gateway endpoint URL"
     Value: !Sub "https://${DrawingWithDynamoDBApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
