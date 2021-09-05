@@ -1,4 +1,4 @@
-let API_BASE = "https://7gfa8t46qa.execute-api.us-west-1.amazonaws.com/Prod/";
+let API_BASE = "https://2uougk1ghh.execute-api.us-west-1.amazonaws.com/Prod/";
 
 function create_uuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {

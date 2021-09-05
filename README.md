@@ -1,15 +1,66 @@
-# Draw with DynamoDB
+# DynamoDB Art
 
-This aim of this project is to grow my knowledge of DynamoDB, Lambda, and API Gateway. The idea is to allow the user to record a drawing on their web browser, and then to store that drawing into DynamoDB and allow the user to play back their drawing.
+This is a simple AWS serverless application that allows you to draw in your web browser and replay your drawings later.
 
-## TODO
+<img src='https://github.com/Thomas-McKanna/DynamoDBArt/raw/master/dynamodbart.gif' title='Video Walkthrough' width='300' alt='Video Walkthrough' />
 
-- Figure out how to deploy DynamoDB table with SAM template
-- Figure out how to deploy API endpoints with open CORS policy
+## Technologies Used
 
-## Backend
+- DynamoDB to store drawing metadata and individual drawings strokes, colors, and line widths for playback
+- Lambda functions to create, read, and delete drawings
+- API Gateway to server the Lambda functions
+- SAM (Serverless Application Model) is deploy serverless infrastructure written as code
+- HTML and JavaScript for the frontend (using Bootstrap library)
 
-## Lessons Learned
+## How to Deploy
+
+First, ensure you have the AWS CLI, the SAM CLI, and Python 3.x installed.
+
+### Linux and MacOS
+
+To deploy the stack, run
+
+```
+./start.sh
+```
+
+To delete the stack, run
+
+```
+./stop.sh
+```
+
+### Windows
+
+First create an S3 bucket in AWS that will store your SAM information. You can name this bucket anything.
+
+Then build the SAM project and deploy it with
+
+```
+sam build
+sam deploy --guided
+```
+
+The SAM CLI will guide you through the deployment process, asking you some questions along the way.
+
+When the deployment finishes, there will be an output with the key `ApiBase`. Take note of this value.
+
+Once the deployment is complete, update the frontend code to point to the correct API base URL by running
+
+```
+python replace_api_base.py <API BASE URL>
+```
+
+Finally, serve the frontend locally with
+
+```
+cd frontend
+python -m http.server 8000 --bind localhost
+```
+
+## Notes to Self
+
+This section contains lessons I learned during this project that I keep for my personal review.
 
 ### Serialization and Deserialization
 
