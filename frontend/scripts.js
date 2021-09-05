@@ -1,4 +1,4 @@
-let API_BASE = "https://ove74of5h8.execute-api.us-west-1.amazonaws.com/Prod";
+let API_BASE = "https://7udmdj5ug1.execute-api.us-west-1.amazonaws.com/Prod";
 
 function create_uuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -31,9 +31,8 @@ function on_mouse_move(event) {
     } else if (state.mouse_down) {
         coords = get_canvas_coords(event);
         set_state_current_coords(coords);
-        ctx.moveTo(state.prev_x, state.prev_y);
-        ctx.lineTo(coords.x, coords.y)
-        ctx.stroke();
+        draw_line(state.prev_x, state.prev_y,
+            coords.x, coords.y, state.color, state.width);
         stroke_history.push(get_condensed_state());
         set_state_previous_coords(coords);
         state.stroke_num += 1;
@@ -49,17 +48,26 @@ function init_state() {
         id: null,
         recording: false,
         stroke_num: 0,
+        color: "black",
+        width: 5,
         curr_x: 0,
         curr_y: 0,
         prev_x: 0,
         prev_y: 0,
         mouse_down: false,
-        mouse_just_down: false,
+        mouse_just_down: false
     };
 }
 
 function init_stroke_history() {
     return [];
+}
+
+function init_slider() {
+    let slider = document.getElementById("width_slider");
+    slider.oninput = function() {
+        state.width = this.value;
+    }
 }
 
 function get_canvas_coords(event) {
@@ -73,6 +81,8 @@ function get_canvas_coords(event) {
 function get_condensed_state() {
     return {
         stroke_num: state.stroke_num,
+        color: state.color,
+        width: state.width,
         curr_x: state.curr_x,
         curr_y: state.curr_y,
         prev_x: state.prev_x,
@@ -203,15 +213,29 @@ async function replay_strokes(strokes) {
     let canvas = document.getElementById("drawing_canvas");
     let ctx = canvas.getContext("2d");
     for (stroke of strokes) {
-        ctx.moveTo(stroke.prev_x, stroke.prev_y);
-        ctx.lineTo(stroke.curr_x, stroke.curr_y)
-        ctx.stroke();
-        await sleep(35);
+        draw_line(stroke.prev_x, stroke.prev_y,
+            stroke.curr_x, stroke.curr_y, stroke.color, stroke.width);
+        await sleep(25);
     }
 }
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function set_line_color(color) {
+    state.color = color;
+}
+
+function draw_line(x1, y1, x2, y2, color, width) {
+    let canvas = document.getElementById("drawing_canvas");
+    let ctx = canvas.getContext("2d");
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2)
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.stroke();
 }
 
 function init_drawing_list() {
@@ -254,4 +278,5 @@ function clear_canvas() {
 add_canvas_event_listeners();
 let state = init_state();
 let stroke_history = init_stroke_history();
+init_slider();
 init_drawing_list();

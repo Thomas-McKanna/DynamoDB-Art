@@ -21,6 +21,28 @@
             <button type="button" class="btn btn-primary" onclick="stop_recording()">Stop Recording <i class="fa fa-stop"></i></button>
         </div>
         <div class="row">
+            <b>Line Color</b>
+        </div>
+        <div class="row mb-2">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn mr-1" onclick="set_line_color('black');" style="background: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                <button type="button" class="btn mr-1" onclick="set_line_color('red');" style="background: red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                <button type="button" class="btn mr-1" onclick="set_line_color('green');" style="background: green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                <button type="button" class="btn mr-1" onclick="set_line_color('blue');" style="background: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                <button type="button" class="btn mr-1" onclick="set_line_color('yellow');" style="background: yellow;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                <button type="button" class="btn mr-1" onclick="set_line_color('teal');" style="background: teal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                <button type="button" class="btn mr-1" onclick="set_line_color('pink');" style="background: pink;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                <button type="button" class="btn mr-1" onclick="set_line_color('orange');" style="background: orange;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                <button type="button" class="btn mr-1" onclick="set_line_color('purple');" style="background: purple;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+            </div>
+        </div>
+        <div class="row">
+            <b>Line Width</b>
+        </div>
+        <div class="row mb-2">
+            <input type="range" min="1" max="20" value="5" class="slider" id="width_slider">
+        </div>
+        <div class="row">
             <canvas id="drawing_canvas" height="500" width="500" style="border: solid;"></canvas>
         </div>
         <div class="row">

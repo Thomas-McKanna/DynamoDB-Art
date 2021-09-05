@@ -4,7 +4,7 @@ Description: Drawing with DynamoDB SAM Template
 
 Globals:
   Function:
-    Timeout: 3
+    Timeout: 30
 
 Resources:
   PutDrawingFunction:
