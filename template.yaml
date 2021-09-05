@@ -71,11 +71,38 @@ Resources:
             Path: /getAllDrawings
             Method: get
             RestApiId: !Ref DrawingWithDynamoDBApi
+  DeleteDrawingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: delete_drawing/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      FunctionName: DeleteDrawing
+      Policies:
+      - Statement:
+        - Sid: DeleteDrawingPolicy
+          Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:DeleteItem
+            - dynamodb:BatchWriteItem
+          Resource: '*'
+      Events:
+        GetAllDrawings:
+          Type: Api
+          Properties:
+            Path: /deleteDrawing
+            Method: delete
+            RestApiId: !Ref DrawingWithDynamoDBApi
   DrawingWithDynamoDBApi:
     Type: AWS::Serverless::Api
     Properties:
       Name: DrawingWithDynamoDBApi
       StageName: Prod
+      Cors:
+        AllowOrigin: "'*'"
+        AllowHeaders: "'Content-Type'"
+        AllowMethods: "'GET,POST,DELETE,OPTIONS'"
   DrawingsMetadataTable:
     Type: AWS::DynamoDB::Table
     Properties:

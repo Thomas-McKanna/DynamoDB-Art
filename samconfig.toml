@@ -2,9 +2,9 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "draw-with-dynamodb"
+stack_name = "dynamodb-art"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1campzqueihga"
-s3_prefix = "draw-with-dynamodb"
+s3_prefix = "dynamodb-art"
 region = "us-west-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"

@@ -1,4 +1,4 @@
-let API_BASE = "https://7udmdj5ug1.execute-api.us-west-1.amazonaws.com/Prod";
+let API_BASE = "https://u7see00elj.execute-api.us-west-1.amazonaws.com/Prod";
 
 function create_uuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -180,27 +180,38 @@ function upload_drawing_to_dynamodb(name) {
 }
 
 function add_drawing_to_list(id, name, timestamp) {
+    let play_icon = document.createElement("i");
+    play_icon.classList.add("fa", "fa-play");
+
     formatted_timestamp = get_formatted_datetime(timestamp);
-
-    let row = document.createElement("div");
-    row.classList.add("row", "mb-2");
-
-    let icon = document.createElement("i");
-    icon.classList.add("fa", "fa-play");
-
     let label = document.createElement("span");
     label.textContent = ` ${name} - ${formatted_timestamp}`;
 
     let replay_button = document.createElement("button")
     replay_button.classList.add("btn", "btn-outline-primary", "mr-2");
 
-    replay_button.appendChild(icon);
+    replay_button.appendChild(play_icon);
     replay_button.appendChild(label);
     replay_button.onclick = function() {
         replay_drawing(id);
     };
 
+    let trash_icon = document.createElement("i");
+    trash_icon.classList.add("fa", "fa-trash");
+
+    let delete_button = document.createElement("button");
+    delete_button.id = `delete-${id}`;
+    delete_button.classList.add("btn", "btn-outline-danger");
+    delete_button.appendChild(trash_icon);
+    delete_button.onclick = function() {
+        delete_drawing(id);
+    }
+
+    let row = document.createElement("div");
+    row.id = `drawing-${id}`;
+    row.classList.add("row", "mb-2");
     row.appendChild(replay_button);
+    row.appendChild(delete_button)
 
     let drawing_list = document.getElementById("drawing_list");
     drawing_list.appendChild(row);
@@ -220,6 +231,33 @@ function get_formatted_datetime(iso_string) {
     let date = datetime.toLocaleDateString("en-us", format_args);
     let time = datetime.toLocaleTimeString("en-us");
     return `${date} ${time}`;
+}
+
+function delete_drawing(id) {
+    body = {
+        "id": id,
+    };
+
+    let request = new XMLHttpRequest();
+    request.open("DELETE", `${API_BASE}/deleteDrawing`, true);
+    request.send(JSON.stringify(body));
+
+    disable_button(`delete-${id}`);
+
+    request.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            if (this.status == 204) {
+                remove_drawing_from_list(id);
+            } else {
+                alert("Failed to delete drawing");
+            }
+        }
+    }
+}
+
+function remove_drawing_from_list(id) {
+    let row = document.getElementById(`drawing-${id}`);
+    row.remove();
 }
 
 function replay_drawing(id) {

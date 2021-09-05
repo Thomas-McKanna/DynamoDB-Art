@@ -22,4 +22,11 @@ source_md5 = ""
 packagetype = "Zip"
 functions = ["GetAllDrawingsFunction"]
 
+[function_build_definitions.430f9d46-eea0-45fd-b495-5540dcd26fac]
+codeuri = "/Users/thomas/Repos/draw_with_dynamodb/delete_drawing"
+runtime = "python3.8"
+source_md5 = ""
+packagetype = "Zip"
+functions = ["DeleteDrawingFunction"]
+
 [layer_build_definitions]

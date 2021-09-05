@@ -30,6 +30,7 @@ def lambda_handler(event, context):
         drawing_id = body["id"]
         name = body["name"]
         strokes = body["strokes"]
+        stroke_count = len(strokes)
         timestamp = datetime.now().isoformat()
     except KeyError:
         return get_response(
@@ -41,6 +42,7 @@ def lambda_handler(event, context):
         drawings_metadata_item = {
             "id": serializer.serialize(drawing_id),
             "name": serializer.serialize(name),
+            "stroke_count": serializer.serialize(stroke_count),
             "timestamp": serializer.serialize(timestamp)
         }
 
