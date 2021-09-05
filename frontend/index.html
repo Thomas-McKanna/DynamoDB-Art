@@ -18,7 +18,8 @@
         </div>
         <div class="row mb-2">
             <button id="start_recording" type="button" class="btn btn-primary mr-2" onclick="start_recording()">Start Recording <i class="fa fa-play"></i></button>
-            <button id="stop_recording" type="button" class="btn btn-primary" onclick="stop_recording()">Stop Recording <i class="fa fa-stop"></i></button>
+            <button id="stop_recording" type="button" class="btn btn-primary mr-2" onclick="stop_recording()">Stop Recording <i class="fa fa-stop"></i></button>
+            <button type="button" class="btn btn-primary" onclick="discard_drawing()">Clear</button>
         </div>
         <div class="row">
             <b>Line Color</b>
@@ -56,7 +57,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Give your drawing a title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" onclick="discard_drawing()" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
                 </div>
@@ -64,7 +65,7 @@
                     <input id="drawing_name" type="text" class="form-control">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+                    <button type="button" onclick="discard_drawing()" class="btn btn-secondary" data-dismiss="modal">Discard</button>
                     <button type="button" class="btn btn-primary" onclick=save_drawing()>Save</button>
                 </div>
             </div>

@@ -127,11 +127,15 @@ function set_state_current_coords(coords) {
     state.curr_y = coords.y;
 }
 
+function reset_history() {
+    state.stroke_num = 0;
+    stroke_history = [];
+}
+
 function start_recording() {
     state.id = create_uuid();
     state.recording = true;
-    state.stroke_num = 0;
-    stroke_history = [];
+    reset_history();
     clear_canvas();
     disable_button("start_recording");
     enable_button("stop_recording");
@@ -306,6 +310,12 @@ function clear_canvas() {
     // if not called, the lines will all appear again at the first call to
     // ctx.stroke.
     ctx.beginPath();
+}
+
+function discard_drawing() {
+    clear_canvas();
+    enable_button("start_recording");
+    reset_history();
 }
 
 add_canvas_event_listeners();
