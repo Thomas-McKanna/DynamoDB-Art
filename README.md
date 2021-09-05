@@ -2,7 +2,7 @@
 
 This is a simple AWS serverless application that allows you to draw in your web browser and replay your drawings later.
 
-<img src='https://github.com/Thomas-McKanna/DynamoDB-Art/raw/master/dynamodbart.gif' title='Video Walkthrough' width='300' alt='Video Walkthrough' />
+<img src='https://github.com/Thomas-McKanna/DynamoDB-Art/raw/main/dynamodb_art.gif' title='Video Walkthrough' width='600' alt='Video Walkthrough' />
 
 ## Technologies Used
 
